@@ -1,64 +1,73 @@
+""" Automatically gets bing reward points """
 import time
-import os
-import kar
-
-from datetime import datetime
+# this contains my username and password
+import credentials
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
-bing = "http://www.bing.com/"
-automatic = "http://www.pogocheats.net/bing-rewards-bot/"
+BING = "http://www.bing.com/"
+REWARDS_SITE = "http://www.pogocheats.net/bing-rewards-bot/"
+USER = credentials.bingusername
+PASSWORD = credentials.bingpassword
 
-user = kar.bingusername
-password = kar.bingpassword
-
-
-def bingLogin():
-    driver.get(bing)
-    assert "Bing" in driver.title
-    login = driver.find_element_by_xpath(
+def bing_login():
+    """ Auto-login to bing """
+    DRIVER.get(BING)
+    assert "Bing" in DRIVER.title
+    login = DRIVER.find_element_by_xpath(
         "/html/body/table/tbody/tr/td/div/div[6]/div/div/div[1]/a[1]")
     login.click()
     time.sleep(1)
-    login = driver.find_element_by_xpath(
+    login = DRIVER.find_element_by_xpath(
         "/html/body/table/tbody/tr/td/div/div[6]/div/div/div[1]/span[3]/ul/li/a")
     login.click()
 
-    login = driver.find_element_by_xpath(
+    login = DRIVER.find_element_by_xpath(
         "/html/body/div[2]/div/div[1]/div/div[2]/div[6]/div[1]/form/div[1]/div[4]/div/input")
-    login.send_keys(user)
+    login.send_keys(USER)
 
-    login = driver.find_element_by_xpath("//*[@id='i0118']")
-    login.send_keys(password)
+    login = DRIVER.find_element_by_xpath("//*[@id='i0118']")
+    login.send_keys(PASSWORD)
 
-    login = driver.find_element_by_xpath("//*[@id='idSIButton9']")
+    login = DRIVER.find_element_by_xpath("//*[@id='idSIButton9']")
     login.click()
 
 
-def bingPoints():
-    driver.get(automatic)
-    assert "Bing Rewards Bot" in driver.title
+def bing_points():
+    """ Goes on to rewards site, and does it"""
+    global DONE
 
-    setup = driver.find_element_by_xpath("//*[@id='sWaitTwo']")
+    DRIVER.get(REWARDS_SITE)
+    assert "Bing Rewards Bot" in DRIVER.title
+
+    setup = DRIVER.find_element_by_xpath("//*[@id='sWaitTwo']")
     setup.clear()
     setup.send_keys("7")
 
-    start = driver.find_element_by_id("search")
+    start = DRIVER.find_element_by_id("search")
     start.click()
 
-    time.sleep(220)
+    DONE = True
+    time.sleep(3000)
+    DRIVER.close()
+    DONE = False
 
-
+def checkTime(hour):
+    """ Checks if the time, is the time wanted """
+    now = datetime.now().time()
+    if now.hour == hour:
+        return True
+    return False
+    
 if __name__ == "__main__":
+    DONE = False
     while True:
-        if kar.checkTime(21):
-            driver = webdriver.Firefox()
+        if checkTime(21) and not DONE:
+            DRIVER = webdriver.Firefox()
             print("driver started")
 
-            bingLogin()
+            bing_login()
             time.sleep(5)
-            bingPoints()
+            bing_points()
 
-            driver.close()
         else:
             time.sleep(420)
