@@ -1,4 +1,6 @@
 # Automatic-Bing-Rewards-Bot
+[![Build Status](https://travis-ci.org/kar731/Automatic-Bing-Rewards-Bot.svg?branch=master)](https://travis-ci.org/kar731/Automatic-Bing-Rewards-Bot)
+
 This bot will automatically launch a firefox process, sign into bing, then launch an automatic bing rewards searcher.
 
 Requirements:    
